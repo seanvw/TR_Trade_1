@@ -66,14 +66,18 @@ class Portfolio():
               print_key = print_key.replace('N Sales','Number of Sales')
 
               if isinstance(value, float):
-                match = re.match(r'.*_roi.*', key)
-                if match:
-                  unit = ' %'
+                if (print_key == "Quantity"):
+                  print(f"\t{print_key}: {value}")
                 else:
-                  unit = ''
-                print(f"\t{print_key}: {value: .2f}{unit}")
+                  match = re.match(r'.*_roi.*', key)
+                  if match:
+                    unit = ' %'
+                  else:
+                    unit = ''
+                  print(f"\t{print_key}: {value: .2f}{unit}")
               else:
                 print(f"\t{print_key}: {value}")
+              
           print()
 
 
@@ -94,12 +98,18 @@ class Portfolio():
           print(f"Share: {ticker} {v.name}")
           print(f"-----  ----")
 
-          print(f"Trailing PE (Price:Earnings): {v.trailingPE}")
-          print(f"Trailing EPS (Earnings Per Share): {v.trailingEps}")
-          print(f"Forward PE: {v.forwardPE}")
-          print(f"Forward EPS: {v.forwardEps}")
-          print(f"Trailing Annual Dividend Rate: {v.trailingAnnualDividendRate}")
-          print(f"Trailing Annual Dividend Yield: {v.trailingAnnualDividendYield}")
+          if v.trailingPE != '.':
+            print(f"Trailing PE (Price:Earnings): {v.trailingPE}")
+          if v.trailingEps != '.':
+            print(f"Trailing EPS (Earnings Per Share): {v.trailingEps}")
+          if v.forwardPE != '.':
+            print(f"Forward PE: {v.forwardPE}")
+          if v.forwardEps != '.':
+            print(f"Forward EPS: {v.forwardEps}")
+          if v.trailingAnnualDividendRate != '.':
+            print(f"Trailing Annual Dividend Rate: {v.trailingAnnualDividendRate}")
+          if v.trailingAnnualDividendYield != '.':
+            print(f"Trailing Annual Dividend Yield: {v.trailingAnnualDividendYield}")
 
           if verbose:
             tas = v.get_transactions()
@@ -148,8 +158,9 @@ class Portfolio():
         print('Super Summary')
         print('-------------')
         print(f"Total Invested: {sup_sum_total_invested: .2f}")
-        print(f"Total Profit [before tax and fees]: {sup_sum_total_profit_before_tax_and_fees: .2f}")
-
+        print(f"Total Profit [before tax and fees removed]: {sup_sum_total_profit_before_tax_and_fees: .2f}")
+        sup_sum_invested_with_profits = sup_sum_total_invested + sup_sum_total_profit_before_tax_and_fees
+        print(f"Total Invested with Profits: {sup_sum_invested_with_profits: .2f}")
         sup_sum_total_roi_before_tax_and_fees = sup_sum_total_profit_before_tax_and_fees / sup_sum_total_invested * 100
         print(f"Total Return on Investment (ROI) [before tax and fees]: {sup_sum_total_roi_before_tax_and_fees: .2f} %")
 
@@ -159,7 +170,7 @@ class Portfolio():
         print(f"Total Profit [before tax]: {sup_sum_total_profit_before_tax: .2f}")
 
         sup_sum_total_roi_before_tax = sup_sum_total_profit_before_tax / sup_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [before tax]: {sup_sum_total_roi_before_tax: .2f} %")
+        print(f"Total Return on Investment (ROI) [before tax, fees removed]: {sup_sum_total_roi_before_tax: .2f} %")
 
         print()
         print(f"--- ShareDeal, generating_report (verbose = {verbose_str}). Done. See yah!------")

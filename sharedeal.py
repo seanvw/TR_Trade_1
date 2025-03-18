@@ -4,7 +4,8 @@ from datetime import datetime
 from dataclasses import dataclass
 import yfinance as yf
 import statistics
-#import re
+import pprint
+import re
 
 @dataclass
 class Transaction():
@@ -124,13 +125,44 @@ class Share():
 
     def __post_init__(self):
         stock = yf.Ticker(self.ticker)
-        self.name = stock.info['shortName']
-        self.trailingPE = stock.info['trailingPE']
-        self.trailingEps = stock.info['trailingEps']
-        self.forwardPE = stock.info['forwardPE']
-        self.forwardEps = stock.info['forwardEps']
-        self.trailingAnnualDividendRate = stock.info['trailingAnnualDividendRate']
-        self.trailingAnnualDividendYield = stock.info['trailingAnnualDividendYield']
+
+        if stock.info['shortName']:
+            self.name = stock.info['shortName']
+        else:
+            self.name = '.'
+
+        # Not nice but has to be fixed later for ETFs etc
+        if stock.info.get('trailingPE') is not None:
+            self.trailingPE = stock.info['trailingPE']
+        else: 
+            self.trailingPE = "."
+
+        if stock.info.get('trailingEps') is not None:
+            self.trailingEps = stock.info['trailingEps']
+        else:
+            self.trailingEps = "."
+
+        if stock.info.get('forwardPE') is not None:
+            self.forwardPE = stock.info['forwardPE']
+        else:
+            self.forwardPE = "."
+
+        if stock.info.get('forwardEps') is not None:
+            self.forwardEps = stock.info['forwardEps']
+        else:
+            self.forwardEps = "."
+
+        if stock.info.get('trailingAnnualDividendRate') is not None:
+            self.trailingAnnualDividendRate = stock.info['trailingAnnualDividendRate']
+        else:
+            self.trailingAnnualDividendRate = "."
+
+        if stock.info.get('trailingAnnualDividendYield') is not None:
+            self.trailingAnnualDividendYield = stock.info['trailingAnnualDividendYield']
+        else:
+            self.trailingAnnualDividendYield = "."
+
+
 
     def add_transaction(self, buy_price, quantity, buy_datetime, transaction_cost_eur):
 
@@ -215,12 +247,54 @@ class Share():
       else:
         return None
 
-    @cached_property
+    @property
     def get_current_price(self) -> float:
       stock = yf.Ticker(self.ticker)
       if self.current_eur_price is None:
-        price_usd = stock.info['regularMarketPrice']  # Get the current price
-        self.current_eur_price = price_usd * self.current_usd_eur
+        regularMarketPrice = stock.info['regularMarketPrice']  # Get the current price
+        #print(f" DEBUG {self.ticker} price {regularMarketPrice}")
+        # Now a hack because it turns out that .DE tickers are provided in EUR, duh!
+        # The prototype was developed assuming USD prices were always served 
+        # Need to re-work this eventually 
+        # .DE is Germany
+        # .MU is Munich
+        # .SG is Stuttgart
+        # .HAM is Hamburg
+        # .DU is Dusseldorf
+        # .F is Frankfurt
+        # .HM is Hanover
+        # .BE is Berlin
+        # .PA is Paris  
+        # .BR is Brussels
+        # .AS is Amsterdam
+        # .L is London
+        # .VI is Vienna
+        # .MI is Milan
+        # .HE is Helsinki
+        # .ST is Stockholm
+        # .CO is Copenhagen
+        # .OL is Oslo
+        # .FI is Paris
+        # .IR is Dublin
+        # .VI is Vienna
+        # .SW is Switzerland
+        # .SG is Singapore
+        # .HK is Hong Kong
+        # .TO is Toronto
+        # .AX is Australia
+        # .NZ is New Zealand
+
+
+        # etc
+
+        # EUR matches I used so far
+        match = re.match(r'.*\.(DE|MU|SG|MI|HA|BE)$', self.ticker)
+        if match:
+            self.current_eur_price = regularMarketPrice
+            #print(f"DEBUG: Taking regularMarketPrice in EUR {self.ticker} price {regularMarketPrice} ")
+        else:
+            self.current_eur_price =  regularMarketPrice * self.current_usd_eur
+            print(f"\t\t....converting currency {self.ticker} price {self.current_eur_price} USD {regularMarketPrice} EUR {self.current_usd_eur}")
       return self.current_eur_price
 
     @property

@@ -1,7 +1,6 @@
 #!python3
-#from sharedeal import *
-from portfolio import * 
 
+from portfolio import * 
 
 portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=False)
 # Current transaction cost for a sale or buy
