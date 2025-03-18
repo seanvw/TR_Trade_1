@@ -1,5 +1,4 @@
 #!python3
-
 from portfolio import * 
 
 portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=False)
