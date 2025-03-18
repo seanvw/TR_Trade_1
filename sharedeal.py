@@ -294,7 +294,7 @@ class Share():
             #print(f"DEBUG: Taking regularMarketPrice in EUR {self.ticker} price {regularMarketPrice} ")
         else:
             self.current_eur_price =  regularMarketPrice * self.current_usd_eur
-            print(f"\t\t....converting currency {self.ticker} price {self.current_eur_price} USD {regularMarketPrice} EUR {self.current_usd_eur}")
+            print(f"\t....converting currency: {self.ticker} price {self.current_eur_price: .2f} USD, {regularMarketPrice} EUR, {self.current_usd_eur} USD:EUR")
       return self.current_eur_price
 
     @property
