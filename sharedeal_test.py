@@ -1,7 +1,7 @@
 #!python3
 from portfolio import * 
 
-portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=False)
+portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=True)
 # Current transaction cost for a sale or buy
 tc_eur = 1.00
 

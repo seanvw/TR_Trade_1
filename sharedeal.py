@@ -46,7 +46,7 @@ class SellTransaction(Transaction):
 
     @cached_property
     def tax_rate(self) -> float:
-        return self.tax / self.profit_before_tax
+        return (self.tax / self.profit_before_tax) * 100
 
     @cached_property
     def roi_after_tax(self) -> float:
@@ -96,7 +96,7 @@ class RealizedSummary():
     mean_roi_before_tax_and_fees: float
     mean_roi_after_tax: float
     total_sum_invested: float
-
+    mean_tax_rate: float
 
     def __post_init__(self):
        pass
@@ -206,6 +206,7 @@ class Share():
       roi_before_tax_and_fees = []
       roi_after_tax = []
       total_sum_invested = 0
+      tax_rates = []
       for transaction in self.transactionsLog:
         if isinstance(transaction,SellTransaction):
           total_profit_before_tax_and_fees += transaction.profit_before_tax
@@ -216,6 +217,7 @@ class Share():
           total_tax += transaction.tax
           roi_before_tax_and_fees.append(transaction.roi_before_tax_and_fees)
           roi_after_tax.append(transaction.roi_after_tax)
+          tax_rates.append(transaction.tax_rate)
         elif isinstance(transaction,BuyTransaction):
           total_transactions_cost_eur += transaction.transaction_cost_eur
         else:
@@ -227,10 +229,10 @@ class Share():
       if n_sales > 0:
         mean_roi_before_tax_and_fees = statistics.mean(roi_before_tax_and_fees)
         mean_roi_after_tax = statistics.mean(roi_after_tax)
+        mean_tax_rate = statistics.mean(tax_rates)
 
         # another profit calc
         total_profit_after_tax_and_fees = total_profit_after_tax_with_fees - total_transactions_cost_eur
-
 
 
         return RealizedSummary(ticker=self.ticker,
@@ -242,7 +244,8 @@ class Share():
                                total_profit_after_tax_and_fees=total_profit_after_tax_and_fees,
                                mean_roi_before_tax_and_fees=mean_roi_before_tax_and_fees,
                                mean_roi_after_tax=mean_roi_after_tax,
-                               total_sum_invested=total_sum_invested
+                               total_sum_invested=total_sum_invested,
+                               mean_tax_rate=mean_tax_rate
                                )
       else:
         return None

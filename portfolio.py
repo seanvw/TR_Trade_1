@@ -23,6 +23,7 @@ class Portfolio():
     owner: str
     platform: str
     verbose_reporting: bool
+  
 
     def __post_init__(self):
         self.shares = {}
@@ -89,10 +90,17 @@ class Portfolio():
         print(f"Portfolio Platform: {self.platform}\n")
         print(f"Portfolio Shares:")
 
-        # super summary
-        sup_sum_total_invested = 0
-        sup_sum_total_profit_before_tax_and_fees = 0
-        sup_sum_total_fees = 0
+
+        # Realized Summary
+        rz_sum_total_invested = 0
+        rz_sum_total_profit_before_tax_and_fees = 0
+        rz_sum_total_fees = 0
+        rz_total_tax = 0
+        rz_tax_rates = []
+       
+        # Unrealized Summary
+        ur_sum_total_currently_invested = 0
+        ur_sum_total_profit_before_tax_and_fees = 0
 
         for ticker, v in self.shares.items():
           print(f"Share: {ticker} {v.name}")
@@ -138,10 +146,12 @@ class Portfolio():
               print(rzs)
               print('=')
             self.object_print_nice(rzs)
-            sup_sum_total_invested += rzs.total_sum_invested
-            sup_sum_total_profit_before_tax_and_fees += rzs.total_profit_before_tax_and_fees
-            sup_sum_total_fees += rzs.total_transactions_cost_eur
-
+            rz_sum_total_invested += rzs.total_sum_invested
+            rz_sum_total_profit_before_tax_and_fees += rzs.total_profit_before_tax_and_fees
+            rz_sum_total_fees += rzs.total_transactions_cost_eur
+            rz_total_tax += rzs.total_tax
+            rz_tax_rates.append(rzs.mean_tax_rate)
+          
           print('\tUnrealized Summary')
           print('\t------------------')
           urs = v.getUnRealizedSummary()
@@ -152,25 +162,41 @@ class Portfolio():
 
           self.object_print_nice(urs)
 
-          sup_sum_total_invested += urs.current_invested
-          sup_sum_total_profit_before_tax_and_fees += urs.unrealized_profit_before_tax
+          ur_sum_total_currently_invested += urs.current_invested
+          ur_sum_total_profit_before_tax_and_fees += urs.unrealized_profit_before_tax
 
-        print('Super Summary')
+        print('Realized Summary')
+        print('----------------')
+        print(f"Total Invested: {rz_sum_total_invested: .2f}")
+        print(f"Total Profit [before tax and fees removed]: {rz_sum_total_profit_before_tax_and_fees: .2f}")
+        rz_sum_invested_with_profits = rz_sum_total_invested + rz_sum_total_profit_before_tax_and_fees
+        print(f"Total Invested with Profits: {rz_sum_invested_with_profits: .2f}")
+        rz_sum_total_roi_before_tax_and_fees = rz_sum_total_profit_before_tax_and_fees / rz_sum_total_invested * 100
+        print(f"Total Return on Investment (ROI) [before tax and fees removed]: {rz_sum_total_roi_before_tax_and_fees: .2f} %")
+        print(f"Total Fees: {rz_sum_total_fees: .2f}")
+        rz_sum_total_profit_before_tax = rz_sum_total_profit_before_tax_and_fees - rz_sum_total_fees
+        print(f"Total Profit [before tax, after fees removed]: {rz_sum_total_profit_before_tax: .2f}")
+        rz_sum_total_roi_before_tax = rz_sum_total_profit_before_tax / rz_sum_total_invested * 100
+        print(f"Total Return on Investment (ROI) [before tax, after fees removed]: {rz_sum_total_roi_before_tax: .2f} %")
+        print(f"Total Tax: {rz_total_tax: .2f}")
+        rz_sum_total_profit_after_tax = rz_sum_total_profit_before_tax - rz_total_tax
+        
+        mean_tax_rate = statistics.mean(rz_tax_rates)
+        print(f"Mean Tax Rate: {mean_tax_rate: .2f} %")
+
+        print(f"Total Profit [after tax & fees removed]: {rz_sum_total_profit_after_tax: .2f}")
+        rz_sum_total_roi_after_tax = rz_sum_total_profit_after_tax / rz_sum_total_invested * 100
+        print(f"Total Return on Investment (ROI) [after tax & fees removed]: {rz_sum_total_roi_after_tax: .2f} %")
+        print()
+
+        print('Unrealized Summary')
         print('-------------')
-        print(f"Total Invested: {sup_sum_total_invested: .2f}")
-        print(f"Total Profit [before tax and fees removed]: {sup_sum_total_profit_before_tax_and_fees: .2f}")
-        sup_sum_invested_with_profits = sup_sum_total_invested + sup_sum_total_profit_before_tax_and_fees
-        print(f"Total Invested with Profits: {sup_sum_invested_with_profits: .2f}")
-        sup_sum_total_roi_before_tax_and_fees = sup_sum_total_profit_before_tax_and_fees / sup_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [before tax and fees]: {sup_sum_total_roi_before_tax_and_fees: .2f} %")
-
-        print(f"Total Fees: {sup_sum_total_fees: .2f}")
-        sup_sum_total_profit_before_tax = sup_sum_total_profit_before_tax_and_fees - sup_sum_total_fees
-
-        print(f"Total Profit [before tax]: {sup_sum_total_profit_before_tax: .2f}")
-
-        sup_sum_total_roi_before_tax = sup_sum_total_profit_before_tax / sup_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [before tax, fees removed]: {sup_sum_total_roi_before_tax: .2f} %")
+        print(f"Total Currently Invested: {ur_sum_total_currently_invested: .2f}")
+        print(f"Total Profit [before tax and fees removed]: {ur_sum_total_profit_before_tax_and_fees: .2f}")
+        ur_sum_invested_with_profits = ur_sum_total_currently_invested + ur_sum_total_profit_before_tax_and_fees
+        print(f"Total Invested with Profits: {ur_sum_invested_with_profits: .2f}")
+        ur_sum_total_roi_before_tax_and_fees = ur_sum_total_profit_before_tax_and_fees / ur_sum_total_currently_invested * 100
+        print(f"Total Return on Investment (ROI) [before tax and fees removed]: {ur_sum_total_roi_before_tax_and_fees: .2f} %")
 
         print()
         print(f"--- ShareDeal, generating_report (verbose = {verbose_str}). Done. See yah!------")
