@@ -13,8 +13,8 @@ class Transaction():
     datetime: datetime
     transaction_cost_eur: float
 
-    #def __post_init__(self):
-    #    pass
+    def __post_init__(self):
+        pass
 
 @dataclass
 class BuyTransaction(Transaction):

@@ -1,24 +1,77 @@
 #!python3
+
 from portfolio import * 
+import unittest
 
-portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=True)
-# Current transaction cost for a sale or buy
-tc_eur = 1.00
+class TestPortfolio(unittest.TestCase):
 
-# 2023/10
-year = 2023
-month = 10
-portfolio.add_share(ticker='AAPL', buy_price=160, quantity=1.5, buy_datetime=datetime(year, month, 1, 9, 30), transaction_cost_eur=tc_eur)
-portfolio.add_share(ticker='AAPL', buy_price=200, quantity=1.5, buy_datetime=datetime(year, month, 2, 10, 30), transaction_cost_eur=tc_eur)
+    def setUp(self):
+        self.portfolio = Portfolio(owner='SW', platform='Trade Republic', verbose_reporting=True)
+        self.year = 2023
+        self.month = 10
+        self.tc_eur = 1.00
 
-# 2023/11
-month = 11
-portfolio.sell_share(ticker='AAPL', sell_price=240, quantity=1.0, tax=15, sell_datetime=datetime(year, month, 1, 14, 30), transaction_cost_eur=tc_eur)
-portfolio.sell_share(ticker='AAPL', sell_price=240, quantity=1.0, tax=15, sell_datetime=datetime(year, month, 2, 18, 30), transaction_cost_eur=tc_eur)
+    def test_add(self):
+        
+        self.assertEqual(self.portfolio.add_share(ticker='AAPL', 
+                                             buy_price=160, 
+                                             quantity=1.5, 
+                                             buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                             transaction_cost_eur=self.tc_eur), None)
+        
+    def test_add_invalid_transaction_cost(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=160, 
+                                quantity=-1.5, 
+                                buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                transaction_cost_eur=-1.00)
+    
+    def test_add_invalid_quantity(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=160, 
+                                quantity=-1.5, 
+                                buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                transaction_cost_eur=self.tc_eur)
+    def test_add_invalid_buy_price(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=-160, 
+                                quantity=1.5, 
+                                buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                transaction_cost_eur=self.tc_eur)
+            
+    def test_add_invalid_buy_datetime(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=160, 
+                                quantity=1.5, 
+                                buy_datetime=datetime(self.year+1000, self.month, 1, 9, 30), 
+                                transaction_cost_eur=self.tc_eur)
+            
+    def test_add_invalid_zero_quantity(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=160, 
+                                quantity=0, 
+                                buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                transaction_cost_eur=self.tc_eur)
+    def test_add_invalid_zero_buy_price(self):
+        with self.assertRaises(ValueError):
+            self.portfolio.add_share(ticker='AAPL', 
+                                buy_price=0, 
+                                quantity=1.5, 
+                                buy_datetime=datetime(self.year, self.month, 1, 9, 30), 
+                                transaction_cost_eur=self.tc_eur)
+            
+    def tearDown(self):
+        return super().tearDown()
+            
+        
 
-# 2023/12 
-month = 12
-portfolio.add_share(ticker='GOOG', buy_price=100.0, quantity=10, buy_datetime=datetime(year, month, 2, 10, 30), transaction_cost_eur=tc_eur)
+if __name__ == '__main__':
+    unittest.main()
 
-print(portfolio)
+
 

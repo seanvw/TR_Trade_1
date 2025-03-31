@@ -172,4 +172,4 @@ cython_debug/
 
 # private information
 my_sharedeal.py
-
+my_sharedeal*.txt

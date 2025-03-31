@@ -33,6 +33,21 @@ class Portfolio():
       return ""
 
     def add_share(self, ticker, buy_price, quantity, buy_datetime, transaction_cost_eur):
+        
+        if (transaction_cost_eur < 0):
+          raise ValueError(f"Transaction cost cannot be negative: {transaction_cost_eur}")
+        if (quantity < 0):
+          raise ValueError(f"Quantity cannot be negative: {quantity}")
+        if (buy_price < 0):
+          raise ValueError(f"Buy price cannot be negative: {buy_price}")
+        dt_now = datetime.now().replace(microsecond=0)
+        if (buy_datetime > dt_now):
+          raise ValueError(f"Buy date cannot be in the future: {buy_datetime} Now: {dt_now}")
+        if (quantity == 0): 
+          raise ValueError(f"Quantity cannot be zero: {quantity}")
+        if (buy_price == 0):
+          raise ValueError(f"Buy price cannot be zero: {buy_price}")
+
         if ticker in self.shares:
           #print(f"Ticker {ticker} found in portfolio.")
           share = self.shares[ticker]
