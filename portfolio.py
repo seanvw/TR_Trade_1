@@ -23,7 +23,7 @@ class Portfolio():
     owner: str
     platform: str
     verbose_reporting: bool
-  
+
 
     def __post_init__(self):
         self.shares = {}
