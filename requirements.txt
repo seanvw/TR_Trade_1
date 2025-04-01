@@ -1,2 +1,5 @@
 # To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
 yfinance==0.2.54
+capture==0.3.0
+
+
