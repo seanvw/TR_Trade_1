@@ -22,4 +22,11 @@ USER appuser
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 # CMD ["python", "sharedeal_test.py"]
 CMD ["bash"]
+# doesn't work
+# CMD  ["python3", "./sharedeal_demo.py", "&& ", "exec", "bash", "-i"]
+
+
+
+
+
 

@@ -26,3 +26,5 @@
 LICENSE
 README.md
 my_sharedeal.py
+my_sharedeal_*.txt
+.DS_Store
