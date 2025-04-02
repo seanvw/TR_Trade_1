@@ -82,8 +82,6 @@ current_invested={current_invested}, total_transactions_cost_eur={self.total_tra
 last_transaction_datetime={self.last_transaction_datetime}")
       return "."
 
-
-
 @dataclass
 class RealizedSummary():
     ticker: str
