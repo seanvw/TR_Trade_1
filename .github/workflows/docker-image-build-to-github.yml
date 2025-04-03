@@ -23,7 +23,7 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: latest-gh-actions, ${{ github.event.repository.name }} ${{ github.ref_name }}
+          tags: latest-gh-actions, ${{ github.event.repository.name }}_${{ github.ref_name }}
 
 
 
