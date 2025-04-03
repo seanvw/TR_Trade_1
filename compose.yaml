@@ -1,0 +1,9 @@
+# docker-compose file for TR_Trade_1-main
+version: '3.8'
+services:
+  my_service:
+    image: seandoc/trtrade1:TR_Trade_1-main
+    tty: true
+
+
+
