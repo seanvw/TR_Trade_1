@@ -1,5 +1,5 @@
 name: Docker Image Build to GitHub
-run-name: ${{ github.actor }} is building a Docker image 🚀
+run-name: Docker image ${{ github.event.repository.name }} on ${{ github.ref_name }}
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: latest-gh-actions, ${{ github.sha }}, ${{ github.ref_name }}
+          tags: latest-gh-actions, ${{ github.event.repository.name }} ${{ github.ref_name }}
 
 
 
