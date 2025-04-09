@@ -182,27 +182,31 @@ class Portfolio():
 
         print('Realized Summary')
         print('----------------')
-        print(f"Total Invested: {rz_sum_total_invested: .2f}")
-        print(f"Total Profit [before tax and fees removed]: {rz_sum_total_profit_before_tax_and_fees: .2f}")
-        rz_sum_invested_with_profits = rz_sum_total_invested + rz_sum_total_profit_before_tax_and_fees
-        print(f"Total Invested with Profits: {rz_sum_invested_with_profits: .2f}")
-        rz_sum_total_roi_before_tax_and_fees = rz_sum_total_profit_before_tax_and_fees / rz_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [before tax and fees removed]: {rz_sum_total_roi_before_tax_and_fees: .2f} %")
-        print(f"Total Fees: {rz_sum_total_fees: .2f}")
-        rz_sum_total_profit_before_tax = rz_sum_total_profit_before_tax_and_fees - rz_sum_total_fees
-        print(f"Total Profit [before tax, after fees removed]: {rz_sum_total_profit_before_tax: .2f}")
-        rz_sum_total_roi_before_tax = rz_sum_total_profit_before_tax / rz_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [before tax, after fees removed]: {rz_sum_total_roi_before_tax: .2f} %")
-        print(f"Total Tax: {rz_total_tax: .2f}")
-        rz_sum_total_profit_after_tax = rz_sum_total_profit_before_tax - rz_total_tax
-        
-        mean_tax_rate = statistics.mean(rz_tax_rates)
-        print(f"Mean Tax Rate: {mean_tax_rate: .2f} %")
+        if rz_sum_total_invested == 0:
+          print("No realized transactions")
+          print()
+        else:
+          print(f"Total Invested: {rz_sum_total_invested: .2f}")
+          print(f"Total Profit [before tax and fees removed]: {rz_sum_total_profit_before_tax_and_fees: .2f}")
+          rz_sum_invested_with_profits = rz_sum_total_invested + rz_sum_total_profit_before_tax_and_fees
+          print(f"Total Invested with Profits: {rz_sum_invested_with_profits: .2f}")
+          rz_sum_total_roi_before_tax_and_fees = rz_sum_total_profit_before_tax_and_fees / rz_sum_total_invested * 100
+          print(f"Total Return on Investment (ROI) [before tax and fees removed]: {rz_sum_total_roi_before_tax_and_fees: .2f} %")
+          print(f"Total Fees: {rz_sum_total_fees: .2f}")
+          rz_sum_total_profit_before_tax = rz_sum_total_profit_before_tax_and_fees - rz_sum_total_fees
+          print(f"Total Profit [before tax, after fees removed]: {rz_sum_total_profit_before_tax: .2f}")
+          rz_sum_total_roi_before_tax = rz_sum_total_profit_before_tax / rz_sum_total_invested * 100
+          print(f"Total Return on Investment (ROI) [before tax, after fees removed]: {rz_sum_total_roi_before_tax: .2f} %")
+          print(f"Total Tax: {rz_total_tax: .2f}")
+          rz_sum_total_profit_after_tax = rz_sum_total_profit_before_tax - rz_total_tax
+          
+          mean_tax_rate = statistics.mean(rz_tax_rates)
+          print(f"Mean Tax Rate: {mean_tax_rate: .2f} %")
 
-        print(f"Total Profit [after tax & fees removed]: {rz_sum_total_profit_after_tax: .2f}")
-        rz_sum_total_roi_after_tax = rz_sum_total_profit_after_tax / rz_sum_total_invested * 100
-        print(f"Total Return on Investment (ROI) [after tax & fees removed]: {rz_sum_total_roi_after_tax: .2f} %")
-        print()
+          print(f"Total Profit [after tax & fees removed]: {rz_sum_total_profit_after_tax: .2f}")
+          rz_sum_total_roi_after_tax = rz_sum_total_profit_after_tax / rz_sum_total_invested * 100
+          print(f"Total Return on Investment (ROI) [after tax & fees removed]: {rz_sum_total_roi_after_tax: .2f} %")
+          print()
 
         print('Unrealized Summary')
         print('-------------')
