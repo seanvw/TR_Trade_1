@@ -172,5 +172,5 @@ cython_debug/
 
 # private information
 my_sharedeal*.py
-my_sharedeal*.txt
+my_sharedeal_reports/
 .DS_Store
